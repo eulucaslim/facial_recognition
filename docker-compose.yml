@@ -1,0 +1,10 @@
+services:
+    face_reco:
+      image: face_reco:1.0
+      ports:
+        - "3005:3005"
+      networks:
+        - "aut-network"
+networks:
+  aut-network:
+      driver: bridge

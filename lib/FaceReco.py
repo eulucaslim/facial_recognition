@@ -1,5 +1,7 @@
 from datetime import datetime
+import face_recognition as fr
 import cv2
+import pickle
 import shutil
 import os
 
@@ -23,6 +25,14 @@ class FaceReco:
             # Save the user photo in server 
             with open(image_path, "wb+") as user_file:
                 shutil.copyfileobj(img_bytes, user_file)
+            
+            read_image = cv2.imread(image_path, cv2.IMREAD_COLOR)
+            
+            image_to_encoding = fr.load_image_file(read_image)
+            encodings = fr.face_encodings(image_to_encoding)[0]
+
+            with open(f"encodings/{user_name}_{cpf}.pkl", "wb") as file_encoding:
+                pickle.dump(encodings, file_encoding)
 
             return True
         except Exception as e:
@@ -48,6 +58,6 @@ class FaceReco:
         except Exception as e:
              raise FaceReco.VerifyUserError(f"Don't found this user!, because this error: {e}")
 
-
-
-        
+    def recognize_faces(path_img: str):
+        image = fr.load_image_file(path_img)
+        faces = fr.face_encodings(image)
