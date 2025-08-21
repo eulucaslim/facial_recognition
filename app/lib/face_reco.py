@@ -1,5 +1,4 @@
 from datetime import datetime
-import cv2
 import shutil
 import os
 

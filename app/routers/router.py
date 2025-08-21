@@ -1,13 +1,11 @@
-from fastapi import FastAPI, UploadFile, File, Form
+from fastapi import APIRouter, UploadFile, File, Form
 from fastapi.responses import JSONResponse
-from lib.FaceReco import FaceReco
-import uvicorn
+from app.lib.face_reco import FaceReco
 
-
-app = FastAPI()
+router = APIRouter(tags=["Face Recognition"])
 face_reco = FaceReco()
 
-@app.post("/register")
+@router.post("/register")
 async def register(file: UploadFile = File(...), 
     user_name: str = Form(...),
     cpf: str = Form(...) 
@@ -18,10 +16,7 @@ async def register(file: UploadFile = File(...),
     else:
         return JSONResponse(content={"message": "400 BAD REQUEST"}, status_code=400)
 
-@app.post("/verify-user")
+@router.post("/verify-user")
 async def verify_user(file: UploadFile = File(...)):
     response = face_reco.found_user(img_bytes=file.file)
     return JSONResponse(content={"message": response})
-
-if __name__ == '__main__':
-    uvicorn.run(app=app, host='0.0.0.0', port=3001)
