@@ -1,10 +1,11 @@
-from app.routers.router import router
+from app.routers import face_reco, sheets
 from fastapi.responses import RedirectResponse
 from fastapi import FastAPI
 import uvicorn
 
 app = FastAPI()
-app.include_router(router)
+app.include_router(face_reco.router)
+app.include_router(sheets.router)
 
 @app.get("/")
 def main():
