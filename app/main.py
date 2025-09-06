@@ -1,11 +1,14 @@
-from app.routers import face_reco, sheets
+from app.routers import face_reco
 from fastapi.responses import RedirectResponse
 from fastapi import FastAPI
+import os
 import uvicorn
 
 app = FastAPI()
 app.include_router(face_reco.router)
-app.include_router(sheets.router)
+
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+import tensorflow as tf
 
 @app.get("/")
 def main():

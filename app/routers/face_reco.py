@@ -1,16 +1,17 @@
+from app.lib.face_reco import FaceReco
 from fastapi import APIRouter, UploadFile, File, Form
 from fastapi.responses import JSONResponse
-from app.lib.face_reco import FaceReco
+from typing import List
 
 router = APIRouter(tags=["Face Recognition"])
 face_reco = FaceReco()
 
 @router.post("/register")
-async def register(file: UploadFile = File(...), 
-    user_name: str = Form(...),
-    cpf: str = Form(...) 
+async def register(
+    files: List[UploadFile] = File(...),
+    username: str = Form(...)
 ) -> dict:
-    response = face_reco.register_user(img_bytes=file.file, user_name=user_name, cpf=cpf)
+    response = face_reco.register_user(files=files, username=username)
     if response:
         return JSONResponse(content={"message": "201 CREATED"}, status_code=201)
     else:
@@ -18,5 +19,5 @@ async def register(file: UploadFile = File(...),
 
 @router.post("/verify-user")
 async def verify_user(file: UploadFile = File(...)):
-    response = face_reco.found_user(img_bytes=file.file)
+    response = face_reco.found_user(file=file)
     return JSONResponse(content={"message": response})
